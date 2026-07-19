@@ -26,7 +26,11 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
@@ -36,6 +40,7 @@ body {
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  width: 100%;
   position: relative;
 }
 
@@ -588,13 +593,31 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 /* mobile accordion fallback */
 @media (max-width: 900px) {
   .panels { flex-direction: column; height: auto; }
-  .panel { min-height: 5rem; flex: none; }
-  .panel.is-open { flex: none; }
-  .panel__closed { position: relative; flex-direction: row; padding: 1.5rem 1.4rem; align-items: center; }
+  .panel {
+    min-height: 5rem;
+    flex: none;
+    scroll-margin-top: 6.5rem;
+    display: grid;
+    grid-template-rows: 5rem 0fr;
+    transition: grid-template-rows 0.6s var(--ease-panel);
+  }
+  .panel.is-open { flex: none; grid-template-rows: 5rem 1fr; }
+  .panel__closed { position: static; flex-direction: row; padding: 1.5rem 1.4rem; align-items: center; grid-row: 1; }
   .panel__vert { writing-mode: horizontal-tb; transform: none; }
-  .panel__open { position: relative; min-width: 0; opacity: 1; pointer-events: auto; display: none; }
-  .panel.is-open .panel__open { display: flex; }
-  .panel.is-open .panel__closed { display: none; }
+  .panel__open {
+    position: static;
+    min-width: 0;
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    grid-row: 2;
+    overflow: hidden;
+    transition: opacity 0.4s;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .panel.is-open .panel__open { opacity: 1; pointer-events: auto; transition: opacity 0.5s 0.2s; }
+  .panel.is-open .panel__closed { opacity: 0.55; }
   .panel__list { grid-template-columns: 1fr; }
 }
 
@@ -913,8 +936,13 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
   .hero__grid > .hero__actions { grid-column: auto; grid-row: auto; order: 3; }
   .hero__grid > .hero__stats { grid-column: auto; order: 4; }
   .hero__eyebrow { margin-bottom: 1.2rem; }
-  .hero__actions { margin-bottom: 0.5rem; }
-  .deck { max-width: 320px; margin: 0.5rem auto 0; gap: 0.9rem; }
+  .hero__note { margin-bottom: 0.6rem; }
+  .hero__actions { margin-top: 1.4rem; margin-bottom: 0.5rem; }
+  /* the route bar right above is also ink-dark — give the CTA its own
+     accent color here so the two pills don't read as one merged block */
+  .hero__actions .btn--ink { background: var(--cobalt); }
+  .hero__actions .btn--ink::after { background: var(--ink); }
+  .deck { max-width: 320px; margin: 1.1rem auto 0; gap: 0.9rem; }
   .deck__stage { height: 260px; }
   .deck__card { width: 150px; height: 200px; }
   .why__grid { grid-template-columns: 1fr; }

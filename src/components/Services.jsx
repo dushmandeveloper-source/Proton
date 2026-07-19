@@ -41,16 +41,20 @@ export default function Services() {
       });
       return () => st.kill();
     });
-    // mobile: no pin — each card opens as it scrolls through the middle
-    // of the viewport
+    // mobile: no pin — each card gets an equal, fixed-height dwell zone
+    // measured from the panels list's own top. Triggering off each panel's
+    // own box (its old approach) breaks down because a collapsed panel is
+    // only ~80px tall — its 50%-to-50% window covers barely any scroll, so
+    // panels 2-4 flew by in a couple of wheel ticks while panel 1 (which
+    // happened to sit under a long stretch of scroll) got all the dwell time.
     mm.add("(max-width: 900px)", () => {
-      // start/end at the same 50% line so exactly one card owns the
-      // viewport middle at any time
-      const triggers = gsap.utils.toArray(section.current.querySelectorAll(".panel")).map((panel, i) =>
+      const list = section.current.querySelector(".panels");
+      const ZONE_VH = 0.9; // each platform gets ~0.9 viewport heights of scroll
+      const triggers = services.map((_, i) =>
         ScrollTrigger.create({
-          trigger: panel,
-          start: "top 50%",
-          end: "bottom 50%",
+          trigger: list,
+          start: () => `top+=${i * ZONE_VH * window.innerHeight} 50%`,
+          end: () => `top+=${(i + 1) * ZONE_VH * window.innerHeight} 50%`,
           onEnter: () => show(i),
           onEnterBack: () => show(i),
         })
@@ -60,9 +64,14 @@ export default function Services() {
     return () => mm.revert();
   }, []);
 
-  // expanding a card changes page height on mobile — recompute trigger positions
+  // expanding a card changes page height on mobile once its grid-row
+  // transition finishes (0.6s) — refresh only after that settles, or the
+  // recalculated trigger positions are measured against a still-animating
+  // layout and drift out of sync with the next scroll tick
   useEffect(() => {
-    if (window.innerWidth <= 900) ScrollTrigger.refresh();
+    if (window.innerWidth > 900) return;
+    const id = setTimeout(() => ScrollTrigger.refresh(), 650);
+    return () => clearTimeout(id);
   }, [open]);
 
   return (

@@ -23,6 +23,7 @@ export default function Hero() {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray(".deck__card");
 
@@ -47,7 +48,12 @@ export default function Hero() {
         .from(".hero__actions > *", { y: 24, opacity: 0, duration: 0.8, stagger: 0.1 }, 0.95)
         .from(
           ".deck__card",
-          { opacity: 0, scale: 0.6, duration: 1, stagger: 0.12, ease: "back.out(1.4)" },
+          // on mobile the deck sits close under the note text — a bounce
+          // overshoot briefly grows cards past their final size and pokes
+          // into the copy above, so skip the bounce there
+          isMobile
+            ? { opacity: 0, scale: 0.85, duration: 0.8, stagger: 0.12, ease: "power3.out" }
+            : { opacity: 0, scale: 0.6, duration: 1, stagger: 0.12, ease: "back.out(1.4)" },
           0.5
         )
         .from(".deck__route", { y: 20, opacity: 0, duration: 0.8 }, 1.3);
