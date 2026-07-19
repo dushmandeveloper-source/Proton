@@ -100,12 +100,17 @@ export default function Hero() {
       // gentle breathing on the whole stage (parent — never fights card tweens)
       gsap.to(".deck__stage", { y: -8, duration: 3.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
 
-      // gentle parallax drift on the deck while scrolling away
-      gsap.to(".deck", {
-        y: 70,
-        ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
-      });
+      // gentle parallax drift on the deck while scrolling away — desktop
+      // only. On mobile the deck (ending in the route bar) sits stacked
+      // directly above the CTA button; drifting it down independently of
+      // normal flow closes or crosses that gap as the user scrolls.
+      if (!isMobile) {
+        gsap.to(".deck", {
+          y: 70,
+          ease: "none",
+          scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
+        });
+      }
     }, root);
     return () => ctx.revert();
   }, []);
