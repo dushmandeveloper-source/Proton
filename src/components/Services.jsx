@@ -41,20 +41,21 @@ export default function Services() {
       });
       return () => st.kill();
     });
-    // mobile: no pin — each card gets an equal, fixed-height dwell zone
-    // measured from the panels list's own top. Triggering off each panel's
-    // own box (its old approach) breaks down because a collapsed panel is
-    // only ~80px tall — its 50%-to-50% window covers barely any scroll, so
-    // panels 2-4 flew by in a couple of wheel ticks while panel 1 (which
-    // happened to sit under a long stretch of scroll) got all the dwell time.
+    // mobile: no pin — panels now hold a fixed height whether open or
+    // closed (see index.css), so opening one never reflows the page and
+    // the trigger math below never drifts out of sync with real layout.
+    // Each panel is its own trigger — that only works now because a
+    // fixed ~600px-tall box gives a real dwell window; the old accordion
+    // was ~80px closed, leaving almost no scroll room before the next
+    // one's trigger fired. The active panel is also auto-scrolled to
+    // center so it always reads as "in focus" rather than drifting past.
     mm.add("(max-width: 900px)", () => {
-      const list = section.current.querySelector(".panels");
-      const ZONE_VH = 0.9; // each platform gets ~0.9 viewport heights of scroll
-      const triggers = services.map((_, i) =>
+      const panels = gsap.utils.toArray(section.current.querySelectorAll(".panel"));
+      const triggers = panels.map((panel, i) =>
         ScrollTrigger.create({
-          trigger: list,
-          start: () => `top+=${i * ZONE_VH * window.innerHeight} 50%`,
-          end: () => `top+=${(i + 1) * ZONE_VH * window.innerHeight} 50%`,
+          trigger: panel,
+          start: "top 60%",
+          end: "bottom 40%",
           onEnter: () => show(i),
           onEnterBack: () => show(i),
         })
@@ -64,14 +65,23 @@ export default function Services() {
     return () => mm.revert();
   }, []);
 
-  // expanding a card changes page height on mobile once its grid-row
-  // transition finishes (0.6s) — refresh only after that settles, or the
-  // recalculated trigger positions are measured against a still-animating
-  // layout and drift out of sync with the next scroll tick
+  // center the newly-opened panel in the viewport on mobile — panels no
+  // longer reflow the page on open, so this is the only thing keeping
+  // the active card "in focus" as the user scrolls past its dwell zone
   useEffect(() => {
     if (window.innerWidth > 900) return;
-    const id = setTimeout(() => ScrollTrigger.refresh(), 650);
-    return () => clearTimeout(id);
+    const panel = section.current?.querySelectorAll(".panel")[open];
+    if (!panel) return;
+    const id = requestAnimationFrame(() => {
+      const r = panel.getBoundingClientRect();
+      const targetY = window.scrollY + r.top - (window.innerHeight - r.height) / 2;
+      if (window.__lenis) {
+        window.__lenis.scrollTo(targetY, { duration: 0.7, easing: (t) => 1 - Math.pow(1 - t, 3) });
+      } else {
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      }
+    });
+    return () => cancelAnimationFrame(id);
   }, [open]);
 
   return (

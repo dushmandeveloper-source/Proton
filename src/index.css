@@ -592,32 +592,43 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 
 /* mobile accordion fallback */
 @media (max-width: 900px) {
-  .panels { flex-direction: column; height: auto; }
-  .panel {
-    min-height: 5rem;
+  /* Each panel keeps a CONSTANT height whether open or closed. Letting
+     a panel grow from ~80px to 600-900px (the old accordion) reflows
+     every panel below it on open — the page height jumps under the
+     user's feet, so their scroll position drifts away from the panel
+     that just opened, and by the time panels 3-4's triggers fired the
+     reflow from 1-2 opening had already carried the viewport past
+     them. Fixed height removes the reflow entirely; centering the open
+     panel is handled by a JS scrollIntoView instead of page flow. */
+  .panels { flex-direction: column; height: auto; gap: 1rem; }
+  .panel, .panel.is-open {
+    height: min(72vh, 620px);
     flex: none;
     scroll-margin-top: 6.5rem;
-    display: grid;
-    grid-template-rows: 5rem 0fr;
-    transition: grid-template-rows 0.6s var(--ease-panel);
+    display: block;
   }
-  .panel.is-open { flex: none; grid-template-rows: 5rem 1fr; }
-  .panel__closed { position: static; flex-direction: row; padding: 1.5rem 1.4rem; align-items: center; grid-row: 1; }
+  .panel__closed {
+    flex-direction: row;
+    padding: 1.5rem 1.4rem;
+    align-items: center;
+    justify-content: space-between;
+  }
   .panel__vert { writing-mode: horizontal-tb; transform: none; }
   .panel__open {
-    position: static;
     min-width: 0;
-    opacity: 0;
-    pointer-events: none;
-    display: flex;
-    grid-row: 2;
-    overflow: hidden;
-    transition: opacity 0.4s;
-    padding-top: 0;
-    padding-bottom: 0;
+    justify-content: flex-start;
+    padding-top: clamp(4.5rem, 14vh, 6rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .panel.is-open .panel__open { opacity: 1; pointer-events: auto; transition: opacity 0.5s 0.2s; }
-  .panel.is-open .panel__closed { opacity: 0.55; }
+
+  /* the desktop gradient is tuned for text anchored at the bottom of a
+     tall panel; on mobile the open text fills the whole panel height,
+     so a chunk of it sits over the lighter part of that gradient
+     directly on top of a bright photo. Flatten it to one dark, even
+     scrim so body copy and list items stay legible everywhere. */
+  .panel__bg::after { background: rgba(7, 12, 30, 0.86); }
+  .panel.is-open .panel__bg img { opacity: 0.18; }
   .panel__list { grid-template-columns: 1fr; }
 }
 

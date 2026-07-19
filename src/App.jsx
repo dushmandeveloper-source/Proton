@@ -25,6 +25,7 @@ export default function App() {
       const raf = (time) => lenis.raf(time * 1000);
       gsap.ticker.add(raf);
       gsap.ticker.lagSmoothing(0);
+      window.__lenis = lenis;
     }
 
     // generic scroll reveals for anything tagged data-reveal
@@ -42,7 +43,10 @@ export default function App() {
 
     return () => {
       ctx.revert();
-      if (lenis) lenis.destroy();
+      if (lenis) {
+        lenis.destroy();
+        delete window.__lenis;
+      }
     };
   }, []);
 
