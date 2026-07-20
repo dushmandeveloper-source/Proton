@@ -41,21 +41,19 @@ export default function Services() {
       });
       return () => st.kill();
     });
-    // mobile: no pin — panels now hold a fixed height whether open or
-    // closed (see index.css), so opening one never reflows the page and
-    // the trigger math below never drifts out of sync with real layout.
-    // Each panel is its own trigger — that only works now because a
-    // fixed ~600px-tall box gives a real dwell window; the old accordion
-    // was ~80px closed, leaving almost no scroll room before the next
-    // one's trigger fired. The active panel is also auto-scrolled to
-    // center so it always reads as "in focus" rather than drifting past.
+    // mobile: no pin — plain accordion in normal document flow. Cards
+    // stay compact (a few rem tall) whether open or closed except the
+    // active one, which expands; opening only shifts the cards below
+    // it by that one height difference, not a full-page reflow, so a
+    // small corrective nudge (below) is enough to keep it in view —
+    // no need to fight the page back into a fixed position.
     mm.add("(max-width: 900px)", () => {
       const panels = gsap.utils.toArray(section.current.querySelectorAll(".panel"));
       const triggers = panels.map((panel, i) =>
         ScrollTrigger.create({
           trigger: panel,
-          start: "top 60%",
-          end: "bottom 40%",
+          start: "top 55%",
+          end: "bottom 45%",
           onEnter: () => show(i),
           onEnterBack: () => show(i),
         })
@@ -65,23 +63,27 @@ export default function Services() {
     return () => mm.revert();
   }, []);
 
-  // center the newly-opened panel in the viewport on mobile — panels no
-  // longer reflow the page on open, so this is the only thing keeping
-  // the active card "in focus" as the user scrolls past its dwell zone
+  // nudge the newly-opened panel back into a comfortable read position
+  // if expanding it pushed its top edge close to (or under) the fixed
+  // nav — a small corrective scroll, not a hard re-center, since the
+  // layout only shifted by one card's height, not the whole page
   useEffect(() => {
     if (window.innerWidth > 900) return;
     const panel = section.current?.querySelectorAll(".panel")[open];
     if (!panel) return;
-    const id = requestAnimationFrame(() => {
+    const id = setTimeout(() => {
       const r = panel.getBoundingClientRect();
-      const targetY = window.scrollY + r.top - (window.innerHeight - r.height) / 2;
-      if (window.__lenis) {
-        window.__lenis.scrollTo(targetY, { duration: 0.7, easing: (t) => 1 - Math.pow(1 - t, 3) });
-      } else {
-        window.scrollTo({ top: targetY, behavior: "smooth" });
+      const NAV_CLEARANCE = 88;
+      if (r.top < NAV_CLEARANCE) {
+        const targetY = window.scrollY + r.top - NAV_CLEARANCE - 12;
+        if (window.__lenis) {
+          window.__lenis.scrollTo(targetY, { duration: 0.5, easing: (t) => 1 - Math.pow(1 - t, 3) });
+        } else {
+          window.scrollTo({ top: targetY, behavior: "smooth" });
+        }
       }
-    });
-    return () => cancelAnimationFrame(id);
+    }, 350);
+    return () => clearTimeout(id);
   }, [open]);
 
   return (
