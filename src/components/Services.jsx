@@ -49,13 +49,17 @@ export default function Services() {
     // no need to fight the page back into a fixed position.
     mm.add("(max-width: 900px)", () => {
       const panels = gsap.utils.toArray(section.current.querySelectorAll(".panel"));
+      // fire the instant a collapsed card's top edge reaches the middle
+      // of the screen, in either scroll direction — a wide single line
+      // rather than a "top 55% / bottom 45%" enter/leave pair sized to
+      // the collapsed (tiny, ~76px) card height, which a fast scroll or
+      // flick can jump clean over before it ever fires
       const triggers = panels.map((panel, i) =>
         ScrollTrigger.create({
           trigger: panel,
-          start: "top 55%",
-          end: "bottom 45%",
-          onEnter: () => show(i),
-          onEnterBack: () => show(i),
+          start: "top 50%",
+          end: "bottom 50%",
+          onToggle: (self) => { if (self.isActive) show(i); },
         })
       );
       return () => triggers.forEach((t) => t.kill());
@@ -63,26 +67,31 @@ export default function Services() {
     return () => mm.revert();
   }, []);
 
-  // nudge the newly-opened panel back into a comfortable read position
-  // if expanding it pushed its top edge close to (or under) the fixed
-  // nav — a small corrective scroll, not a hard re-center, since the
-  // layout only shifted by one card's height, not the whole page
+  // center the newly-opened panel in the viewport — every time, both
+  // scrolling down and up. The accordion's expand/collapse reflows the
+  // page (the open card is much taller than a collapsed one), so
+  // without this the card that just opened can end up mostly above or
+  // below the visible area instead of fully readable in the middle.
+  // Waiting for the CSS grid-row transition (0.6s) to finish before
+  // measuring keeps this from re-centering against a still-animating,
+  // not-yet-final layout.
   useEffect(() => {
     if (window.innerWidth > 900) return;
     const panel = section.current?.querySelectorAll(".panel")[open];
     if (!panel) return;
     const id = setTimeout(() => {
+      // the grid-row expand/collapse transition (0.6s) has settled by
+      // now — refresh so every panel's trigger start/end reflects the
+      // new layout before we measure and scroll against it
+      ScrollTrigger.refresh();
       const r = panel.getBoundingClientRect();
-      const NAV_CLEARANCE = 88;
-      if (r.top < NAV_CLEARANCE) {
-        const targetY = window.scrollY + r.top - NAV_CLEARANCE - 12;
-        if (window.__lenis) {
-          window.__lenis.scrollTo(targetY, { duration: 0.5, easing: (t) => 1 - Math.pow(1 - t, 3) });
-        } else {
-          window.scrollTo({ top: targetY, behavior: "smooth" });
-        }
+      const targetY = window.scrollY + r.top - Math.max(16, (window.innerHeight - r.height) / 2);
+      if (window.__lenis) {
+        window.__lenis.scrollTo(targetY, { duration: 0.6, easing: (t) => 1 - Math.pow(1 - t, 3) });
+      } else {
+        window.scrollTo({ top: targetY, behavior: "smooth" });
       }
-    }, 350);
+    }, 650);
     return () => clearTimeout(id);
   }, [open]);
 
