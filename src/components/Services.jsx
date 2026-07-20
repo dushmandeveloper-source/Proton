@@ -77,6 +77,12 @@ export default function Services() {
   // not-yet-final layout.
   useEffect(() => {
     if (window.innerWidth > 900) return;
+    const r = section.current?.getBoundingClientRect();
+    // page load lands on the hero; Services sits far below the fold
+    // and hasn't been scrolled to yet, so there's nothing here to
+    // "center" — only re-center once the section is actually at least
+    // partly on screen, i.e. this is a real scroll-driven open
+    if (!r || r.top > window.innerHeight || r.bottom < 0) return;
     const panel = section.current?.querySelectorAll(".panel")[open];
     if (!panel) return;
     const id = setTimeout(() => {
