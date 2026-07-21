@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { services } from "../data/services.js";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 const Arrow = () => (
   <svg className="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -20,6 +21,7 @@ const DECK = [services[3], services[2], services[1], services[0]];
 
 export default function Hero() {
   const root = useRef(null);
+  const { t, serviceCopy } = useLanguage();
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -119,26 +121,19 @@ export default function Hero() {
     <section className="hero" id="top" ref={root}>
       <div className="container hero__grid">
         <div className="hero__intro">
-          <p className="eyebrow hero__eyebrow">Sino–Lanka Strategic Cooperation Platform</p>
+          <p className="eyebrow hero__eyebrow">{t.hero.eyebrow}</p>
           <h1 className="display hero__title">
-            <span className="split-line"><span>Connecting Sri Lanka</span></span>
-            <span className="split-line"><span><em className="amp">&</em> China through</span></span>
-            <span className="split-line"><span><span className="accent">trusted solutions.</span></span></span>
+            <span className="split-line"><span>{t.hero.titleLine1}</span></span>
+            <span className="split-line"><span><em className="amp">{t.hero.titleAmp}</em> {t.hero.titleLine2}</span></span>
+            <span className="split-line"><span><span className="accent">{t.hero.titleLine3}</span></span></span>
           </h1>
-          <p className="lede hero__lede">
-            A professional Sino–Lanka cooperation platform providing legal, compliant, and reliable
-            cross-border services in education, healthcare, business, and industrial development.
-          </p>
-          <p className="hero__note">
-            PROTON SERVICES PLATFORM is operated by a Sri Lankan licensed company, connecting
-            individuals, enterprises, and organizations with China's world-class resources including
-            universities, hospitals, industrial parks, technology providers, and business networks.
-          </p>
+          <p className="lede hero__lede">{t.hero.lede}</p>
+          <p className="hero__note">{t.hero.note}</p>
         </div>
 
         <div className="hero__actions">
-          <a href="#services" className="btn btn--ink"><span>Explore Services <Arrow /></span></a>
-          <a href="#about" className="btn btn--ghost"><span>About the Platform</span></a>
+          <a href="#services" className="btn btn--ink"><span>{t.hero.ctaExplore} <Arrow /></span></a>
+          <a href="#about" className="btn btn--ghost"><span>{t.hero.ctaAbout}</span></a>
         </div>
 
         <div className="deck" aria-hidden="true">
@@ -146,7 +141,7 @@ export default function Hero() {
             {DECK.map((s) => (
               <div key={s.num} className="deck__card" style={{ "--card-accent": s.accent }}>
                 <img src={s.img} alt="" loading="eager" />
-                <span className="deck__tag"><span className="dot" /> {s.num} {s.short}</span>
+                <span className="deck__tag"><span className="dot" /> {s.num} {serviceCopy[s.key].short}</span>
               </div>
             ))}
           </div>
@@ -155,7 +150,7 @@ export default function Hero() {
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            <span>SRI LANKA</span>
+            <span>{t.hero.routeFrom}</span>
             <span className="line">
               <span className="dot-fly">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -163,7 +158,7 @@ export default function Hero() {
                 </svg>
               </span>
             </span>
-            <span>CHINA</span>
+            <span>{t.hero.routeTo}</span>
           </div>
         </div>
 

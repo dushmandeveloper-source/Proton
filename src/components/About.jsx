@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { services } from "../data/services.js";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +15,7 @@ const Check = () => (
 
 export default function About() {
   const root = useRef(null);
+  const { t, serviceCopy } = useLanguage();
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -68,39 +70,30 @@ export default function About() {
           </div>
           <div className="about__badge-card">
             <div>
-              <b><Check /> Licensed</b>
-              <span>Sri Lankan Entity</span>
+              <b><Check /> {t.about.licensed}</b>
+              <span>{t.about.licensedSub}</span>
             </div>
             <div>
-              <b><Check /> Verified</b>
-              <span>China Network</span>
+              <b><Check /> {t.about.verified}</b>
+              <span>{t.about.verifiedSub}</span>
             </div>
           </div>
         </div>
 
         <div data-reveal>
-          <p className="eyebrow">About Proton</p>
-          <h2 className="display about__title">Your trusted gateway between Sri Lanka &amp; China.</h2>
-          <p>
-            China offers world-class opportunities in education, healthcare, technology,
-            manufacturing, and business development.
-          </p>
-          <p>
-            However, accessing these opportunities requires proper guidance, trusted connections,
-            and professional support.
-          </p>
-          <p>
-            PROTON SERVICES PLATFORM provides a complete solution by combining Sri Lankan market
-            understanding with strong Chinese institutional resources.
-          </p>
+          <p className="eyebrow">{t.about.eyebrow}</p>
+          <h2 className="display about__title">{t.about.title}</h2>
+          <p>{t.about.p1}</p>
+          <p>{t.about.p2}</p>
+          <p>{t.about.p3}</p>
           <div className="about__chips">
             {services.map((s) => (
               <span key={s.num} className="chip" style={{ "--chip-accent": s.accent }}>
-                <i aria-hidden="true" /> {s.short}
+                <i aria-hidden="true" /> {serviceCopy[s.key].short}
               </span>
             ))}
             <span className="chip" style={{ "--chip-accent": "#1d4ed8" }}>
-              <i aria-hidden="true" /> End-to-End Support
+              <i aria-hidden="true" /> {t.about.chipEndToEnd}
             </span>
           </div>
         </div>

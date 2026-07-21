@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-
-const ITEMS = ["Sino–Lanka Cooperation", "Education", "Healthcare", "Business Solutions", "Industrial Tech"];
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 export default function Marquee() {
   const root = useRef(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -17,10 +17,10 @@ export default function Marquee() {
 
   const half = (
     <>
-      {ITEMS.map((t) => (
-        <span key={t}>
+      {t.marquee.map((item) => (
+        <span key={item}>
           <em>✦</em>
-          {t}
+          {item}
         </span>
       ))}
     </>

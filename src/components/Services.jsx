@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { services } from "../data/services.js";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,7 @@ const Arrow = () => (
 );
 
 export default function Services() {
+  const { t, serviceCopy } = useLanguage();
   // desktop: exclusive — `open` is the single active index, driven by
   // the pinned scroll story. mobile: additive — `openMobile` is a set
   // of every card the user has scrolled to (or tapped); once opened a
@@ -142,11 +144,11 @@ export default function Services() {
       <div className="container">
         <div className="services__head">
           <div data-reveal>
-            <p className="eyebrow">Our Four Service Platforms</p>
-            <h2 className="display services__title">Choose your opportunity path.</h2>
+            <p className="eyebrow">{t.services.eyebrow}</p>
+            <h2 className="display services__title">{t.services.title}</h2>
           </div>
           <p className="lede services__intro" data-reveal>
-            PROTON provides specialized solutions through four main service platforms.
+            {t.services.intro}
           </p>
         </div>
 
@@ -154,6 +156,7 @@ export default function Services() {
           {services.map((s, i) => {
             const isOpen = isMobile ? openMobile.has(i) : open === i;
             const handleClick = () => (isMobile ? toggleMobile(i) : show(i));
+            const copy = serviceCopy[s.key];
             return (
               <button
                 key={s.num}
@@ -169,20 +172,20 @@ export default function Services() {
 
                 <span className="panel__closed">
                   <span className="panel__num">{s.num}</span>
-                  <span className="panel__vert">{s.short}</span>
+                  <span className="panel__vert">{copy.short}</span>
                   <span className="panel__plus" aria-hidden="true">+</span>
                 </span>
 
                 <span className="panel__open">
-                  <span className="panel__kicker">{s.num} — {s.kicker}</span>
-                  <span className="panel__heading">{s.heading}</span>
-                  <span className="panel__desc">{s.desc}</span>
+                  <span className="panel__kicker">{s.num} — {copy.kicker}</span>
+                  <span className="panel__heading">{copy.heading}</span>
+                  <span className="panel__desc">{copy.desc}</span>
                   <ul className="panel__list">
-                    {s.items.map((it) => (
+                    {copy.items.map((it) => (
                       <li key={it}>{it}</li>
                     ))}
                   </ul>
-                  <span className="panel-cta">{s.cta} <Arrow /></span>
+                  <span className="panel-cta">{copy.cta} <Arrow /></span>
                 </span>
               </button>
             );

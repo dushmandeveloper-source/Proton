@@ -222,6 +222,58 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 .nav__links a:not(.btn):hover::after { transform: scaleX(1); transform-origin: left; }
 .nav__cta { padding: 0.7rem 1.5rem; font-size: 0.85rem; }
 
+/* ---------- language switcher ---------- */
+
+.lang-switch { position: relative; }
+.lang-switch__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--line-light);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.lang-switch__trigger:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.lang-switch__menu {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  min-width: 8.5rem;
+  background: var(--paper, #fff);
+  border: 1px solid var(--line-light);
+  border-radius: 0.9rem;
+  box-shadow: 0 20px 45px -20px rgba(7, 18, 51, 0.35);
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  z-index: 40;
+}
+.lang-switch__menu button {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.lang-switch__menu button:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.lang-switch__menu button.is-active { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+
+@media (max-width: 1023px) {
+  .lang-switch__trigger { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
+}
+
 /* ---------- hero ---------- */
 
 .hero {

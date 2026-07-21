@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Vision() {
   const root = useRef(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,20 +29,16 @@ export default function Vision() {
     <section className="vision" id="vision" ref={root}>
       <div className="container">
         <div className="vision__head" data-reveal>
-          <p className="eyebrow">Vision &amp; Mission</p>
-          <h2 className="display vision__title">What we stand for.</h2>
+          <p className="eyebrow">{t.vision.eyebrow}</p>
+          <h2 className="display vision__title">{t.vision.title}</h2>
         </div>
 
         <div className="vision__grid">
           <article className="vcard vcard--dark" data-reveal>
             <span className="vcard__ring" aria-hidden="true" />
-            <p className="eyebrow eyebrow--light">Our Vision</p>
-            <h3>The leading Sino–Lanka strategic cooperation platform.</h3>
-            <p>
-              To become the leading Sino–Lanka strategic cooperation platform, empowering
-              individuals and organizations through trusted global opportunities, innovation, and
-              sustainable partnerships.
-            </p>
+            <p className="eyebrow eyebrow--light">{t.vision.visionLabel}</p>
+            <h3>{t.vision.visionHeading}</h3>
+            <p>{t.vision.visionBody}</p>
             <div className="vcard__foot" aria-hidden="true">
               <span className="vcard__dots">
                 <i style={{ background: "#3b82f6" }} />
@@ -48,24 +46,19 @@ export default function Vision() {
                 <i style={{ background: "#f0b23e" }} />
                 <i style={{ background: "#4cc3e8" }} />
               </span>
-              Education · Healthcare · Business · Industrial
+              {t.vision.visionFoot}
             </div>
           </article>
 
           <article className="vcard vcard--light" data-reveal>
-            <p className="eyebrow">Our Mission</p>
-            <h3>A reliable bridge between Sri Lanka and China.</h3>
-            <p>
-              To create a reliable bridge between Sri Lanka and China by connecting people,
-              businesses, and institutions with professional, transparent, and legally compliant
-              services.
-            </p>
-            <p className="vcard__aim-label">We aim to achieve:</p>
+            <p className="eyebrow">{t.vision.missionLabel}</p>
+            <h3>{t.vision.missionHeading}</h3>
+            <p>{t.vision.missionBody}</p>
+            <p className="vcard__aim-label">{t.vision.aimLabel}</p>
             <ul className="vision__aims">
-              <li>Resource sharing between two nations</li>
-              <li>Sustainable international cooperation</li>
-              <li>Professional cross-border solutions</li>
-              <li>Mutual growth and success</li>
+              {t.vision.aims.map((aim) => (
+                <li key={aim}>{aim}</li>
+              ))}
             </ul>
           </article>
         </div>
