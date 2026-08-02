@@ -74,9 +74,7 @@ export default function Nav() {
     <nav className={`nav ${scrolled ? "is-scrolled" : ""} ${hidden ? "is-hidden" : ""}`}>
       <div className="container nav__inner">
         <a href="#top" className="nav__brand">
-          <i aria-hidden="true" />
-          PROTON
-          <small>SERVICES PLATFORM</small>
+          <img src="/poton.png" alt="PROTON Services Platform" className="nav__logo" />
         </a>
         <div className="nav__links">
           <a href="#services">{t.nav.services}</a>

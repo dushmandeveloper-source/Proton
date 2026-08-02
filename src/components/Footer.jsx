@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="footer__grid">
           <div>
             <div className="footer__brand">
-              <i aria-hidden="true" /> PROTON
+              <img src="/poton.png" alt="PROTON Services Platform" className="footer__logo" />
             </div>
             <p>{t.footer.tagline}</p>
           </div>
