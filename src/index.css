@@ -207,6 +207,48 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 .nav__links a:not(.btn):hover::after { transform: scaleX(1); transform-origin: left; }
 .nav__cta { padding: 0.7rem 1.5rem; font-size: 0.85rem; }
 
+/* ---------- nav dropdown ---------- */
+
+.nav__dropdown { position: relative; }
+.nav__dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  padding-block: 0.3rem;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.nav__dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 11rem;
+  background: var(--paper, #fff);
+  border: 1px solid var(--line-light);
+  border-radius: 0.9rem;
+  box-shadow: 0 20px 45px -20px rgba(7, 18, 51, 0.35);
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  z-index: 40;
+}
+.nav__dropdown-menu a {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.6rem;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.nav__dropdown-menu a:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+
 /* ---------- language switcher ---------- */
 
 .lang-switch { position: relative; }
@@ -1049,6 +1091,121 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
   .about__grid { padding-top: 3rem; }
   .why__cell { padding: 1.9rem 1.5rem; }
   .services__progress { display: none; }
+}
+
+/* ---------- secondary pages (about / contact / service detail) ---------- */
+
+.app-shell { position: relative; }
+.page-main { position: relative; z-index: 1; padding-top: 6.5rem; }
+
+/* about page: reuse .about section styles but let it breathe as a full page */
+.about-page .about { border-block: none; padding-top: 2rem; }
+
+/* service detail hero */
+.service-hero { padding: 3rem 0 4.5rem; }
+.service-hero__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+.service-hero__title {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  margin: 1.2rem 0 1.3rem;
+  max-width: 18ch;
+}
+.service-hero__desc { max-width: 34rem; }
+.service-hero__visual {
+  border-radius: 1.6rem;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  box-shadow: 0 40px 80px -30px rgba(7, 18, 51, 0.35);
+}
+.service-hero__visual img { width: 100%; height: 100%; object-fit: cover; }
+
+.service-details { background: #fff; border-block: 1px solid var(--line); padding: 4rem 0; }
+.service-details__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+.service-details__title { font-size: clamp(1.7rem, 2.6vw, 2.2rem); margin-bottom: 1.6rem; }
+.service-details__list { display: grid; gap: 1rem; }
+.service-details__list li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.service-details__list li svg { flex: 0 0 auto; color: var(--accent); }
+.service-details__cta-card {
+  background: var(--porcelain);
+  border: 1px solid var(--line);
+  border-radius: 1.4rem;
+  padding: clamp(1.6rem, 3vw, 2.2rem);
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+.service-details__cta-card p:not(.eyebrow) { color: var(--slate); line-height: 1.65; }
+
+/* contact page */
+.contact-hero { padding: 3rem 0 2.5rem; }
+.contact-hero__title { font-size: clamp(2.2rem, 4.2vw, 3.4rem); margin: 1.2rem 0 1.2rem; max-width: 20ch; }
+.contact-hero__intro { max-width: 36rem; }
+
+.contact-body { background: #fff; border-block: 1px solid var(--line); padding: 3.5rem 0 4.5rem; }
+.contact-body__grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: start;
+}
+.contact-info h5 {
+  color: var(--ink);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.contact-info ul { display: grid; gap: 0.9rem; font-size: 0.98rem; font-weight: 500; color: var(--slate); }
+.contact-info ul a { transition: color 0.3s; }
+.contact-info ul a:hover { color: var(--accent); }
+
+.contact-form { display: grid; gap: 1.3rem; }
+.contact-form__field { display: grid; gap: 0.5rem; }
+.contact-form__field span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+.contact-form__field input,
+.contact-form__field textarea {
+  font: inherit;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  background: var(--porcelain);
+  color: var(--ink);
+  resize: vertical;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.contact-form__field input:focus,
+.contact-form__field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.contact-form__submit { justify-self: start; margin-top: 0.4rem; }
+
+@media (max-width: 1023px) {
+  .service-hero__grid { grid-template-columns: 1fr; }
+  .service-details__grid { grid-template-columns: 1fr; }
+  .contact-body__grid { grid-template-columns: 1fr; }
 }
 
 /* ---------- reduced motion ---------- */

@@ -12,6 +12,7 @@ export const LANGUAGES = [
 export const translations = {
   en: {
     nav: {
+      home: "Home",
       services: "Services",
       vision: "Vision",
       about: "About",
@@ -73,6 +74,15 @@ export const translations = {
       verifiedSub: "China Network",
       chipEndToEnd: "End-to-End Support",
     },
+    contactPage: {
+      eyebrow: "Get In Touch",
+      title: "Let's start the conversation.",
+      intro: "Have a question about education, healthcare, business, or industrial cooperation? Send us a message and our team will get back to you.",
+      formName: "Full Name",
+      formEmail: "Email Address",
+      formMessage: "Message",
+      formSubmit: "Send Message",
+    },
     why: {
       eyebrow: "Why Choose Proton?",
       title: "Trusted. Professional. Connected.",
@@ -97,6 +107,7 @@ export const translations = {
 
   si: {
     nav: {
+      home: "මුල් පිටුව",
       services: "සේවාවන්",
       vision: "දැක්ම",
       about: "අප ගැන",
@@ -158,6 +169,15 @@ export const translations = {
       verifiedSub: "චීන ජාලය",
       chipEndToEnd: "සම්පූර්ණ සහාය",
     },
+    contactPage: {
+      eyebrow: "අප හා සම්බන්ධ වන්න",
+      title: "අපි කතාබහ ආරම්භ කරමු.",
+      intro: "අධ්‍යාපනය, සෞඛ්‍ය, ව්‍යාපාර හෝ කාර්මික සහයෝගිතාව ගැන ප්‍රශ්නයක් තිබේද? අපට පණිවිඩයක් එවන්න, අපගේ කණ්ඩායම ඔබට පිළිතුරු දෙනු ඇත.",
+      formName: "සම්පූර්ණ නම",
+      formEmail: "විද්‍යුත් තැපැල් ලිපිනය",
+      formMessage: "පණිවිඩය",
+      formSubmit: "පණිවිඩය එවන්න",
+    },
     why: {
       eyebrow: "ප්‍රොටෝන් තෝරන්නේ ඇයි?",
       title: "විශ්වාසනීය. වෘත්තීය. සම්බන්ධිත.",
@@ -182,6 +202,7 @@ export const translations = {
 
   ta: {
     nav: {
+      home: "முகப்பு",
       services: "சேவைகள்",
       vision: "நோக்கம்",
       about: "எங்களைப் பற்றி",
@@ -243,6 +264,15 @@ export const translations = {
       verifiedSub: "சீன வலைப்பின்னல்",
       chipEndToEnd: "முழுமையான ஆதரவு",
     },
+    contactPage: {
+      eyebrow: "தொடர்பு கொள்ளுங்கள்",
+      title: "உரையாடலைத் தொடங்குவோம்.",
+      intro: "கல்வி, சுகாதாரம், வணிகம் அல்லது தொழில்துறை ஒத்துழைப்பு பற்றி கேள்வி உள்ளதா? எங்களுக்கு ஒரு செய்தி அனுப்புங்கள், எங்கள் குழு உங்களைத் தொடர்பு கொள்ளும்.",
+      formName: "முழு பெயர்",
+      formEmail: "மின்னஞ்சல் முகவரி",
+      formMessage: "செய்தி",
+      formSubmit: "செய்தி அனுப்பவும்",
+    },
     why: {
       eyebrow: "ஏன் ப்ரோட்டானைத் தேர்வு செய்ய வேண்டும்?",
       title: "நம்பகமானது. தொழில்முறையானது. இணைக்கப்பட்டது.",
@@ -267,6 +297,7 @@ export const translations = {
 
   zh: {
     nav: {
+      home: "首页",
       services: "服务项目",
       vision: "愿景",
       about: "关于我们",
@@ -327,6 +358,15 @@ export const translations = {
       verified: "认证网络",
       verifiedSub: "中国合作网络",
       chipEndToEnd: "全程支持",
+    },
+    contactPage: {
+      eyebrow: "联系我们",
+      title: "让我们开始对话。",
+      intro: "对教育、医疗、商业或工业合作有疑问？给我们留言，我们的团队会尽快回复您。",
+      formName: "姓名",
+      formEmail: "电子邮箱",
+      formMessage: "留言内容",
+      formSubmit: "发送留言",
     },
     why: {
       eyebrow: "为何选择普罗顿？",

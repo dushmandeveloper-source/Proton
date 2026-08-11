@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { services, servicesTranslations } from "../data/services.js";
 
 function LanguageSwitcher() {
   const { lang, setLang, languages } = useLanguage();
@@ -53,6 +54,52 @@ function LanguageSwitcher() {
   );
 }
 
+function ServicesDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const { t, lang } = useLanguage();
+  const copy = servicesTranslations[lang];
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [open]);
+
+  return (
+    <div className="nav__dropdown" ref={ref}>
+      <button
+        type="button"
+        className="nav__dropdown-trigger"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        {t.nav.services}
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      {open && (
+        <div className="nav__dropdown-menu" role="menu">
+          {services.map((s) => (
+            <a
+              key={s.key}
+              href={`/services/${s.key}.html`}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+            >
+              {copy[s.key].short}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -73,16 +120,15 @@ export default function Nav() {
   return (
     <nav className={`nav ${scrolled ? "is-scrolled" : ""} ${hidden ? "is-hidden" : ""}`}>
       <div className="container nav__inner">
-        <a href="#top" className="nav__brand">
+        <a href="/" className="nav__brand">
           <img src="/poton.png" alt="PROTON Services Platform" className="nav__logo" />
         </a>
         <div className="nav__links">
-          <a href="#services">{t.nav.services}</a>
-          <a href="#vision">{t.nav.vision}</a>
-          <a href="#about">{t.nav.about}</a>
-          <a href="#why">{t.nav.why}</a>
+          <a href="/">{t.nav.home}</a>
+          <a href="/about.html">{t.nav.about}</a>
+          <ServicesDropdown />
           <LanguageSwitcher />
-          <a href="#contact" className="btn btn--ink nav__cta"><span>{t.nav.contact}</span></a>
+          <a href="/contact.html" className="btn btn--ink nav__cta"><span>{t.nav.contact}</span></a>
         </div>
       </div>
     </nav>
