@@ -12,6 +12,7 @@ export default defineConfig({
         about: resolve(__dirname, 'about.html'),
         contact: resolve(__dirname, 'contact.html'),
         serviceEducation: resolve(__dirname, 'services/education.html'),
+        university: resolve(__dirname, 'services/university.html'),
         serviceHealthcare: resolve(__dirname, 'services/healthcare.html'),
         serviceBusiness: resolve(__dirname, 'services/business.html'),
         serviceIndustrial: resolve(__dirname, 'services/industrial.html'),
