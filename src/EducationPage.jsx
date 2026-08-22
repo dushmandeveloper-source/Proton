@@ -2,6 +2,7 @@ import PageShell from "./PageShell.jsx";
 import { services } from "./data/services.js";
 import { useLanguage } from "./i18n/LanguageContext.jsx";
 import UniversitiesSection from "./components/UniversitiesSection.jsx";
+import CoursesSection from "./components/CoursesSection.jsx";
 
 const Arrow = () => (
   <svg className="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -43,8 +44,8 @@ export default function EducationPage() {
                 <a href="#universities" className="btn btn--ink">
                   <span>Explore Universities <Arrow /></span>
                 </a>
-                <a href="/contact.html" className="btn btn--ghost">
-                  <span>{copy.cta}</span>
+                <a href="#courses" className="btn btn--ink">
+                  <span>Explore Courses <Arrow /></span>
                 </a>
               </div>
             </div>
@@ -92,6 +93,33 @@ export default function EducationPage() {
             </div>
           </div>
         </section>
+
+        <section className="csca-promo">
+          <div className="container">
+            <a href="/services/csca.html" className="csca-promo__card" data-reveal>
+              <div className="csca-promo__glow" aria-hidden="true" />
+              <div className="csca-promo__content">
+                <p className="eyebrow csca-promo__eyebrow">CSCA Exam Preparation</p>
+                <h2 className="display csca-promo__title">Get ready for the China Scholastic Competency Assessment</h2>
+                <p className="csca-promo__desc">
+                  Mandatory for Chinese Government Scholarship applicants from 2026 — explore our CSCA prep courses covering
+                  Mathematics, Specialized Chinese, Physics and Chemistry, with real exam-session schedules.
+                </p>
+                <span className="btn btn--ink csca-promo__btn">
+                  <span>Explore CSCA Courses <Arrow /></span>
+                </span>
+              </div>
+              <div className="csca-promo__badges">
+                <span className="csca-promo__badge">Math</span>
+                <span className="csca-promo__badge">Chinese</span>
+                <span className="csca-promo__badge">Physics</span>
+                <span className="csca-promo__badge">Chemistry</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <CoursesSection />
 
         <UniversitiesSection />
       </main>
