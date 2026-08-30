@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { services, servicesTranslations } from "../data/services.js";
+import { useAuth } from "../auth/AuthContext.jsx";
 
 function LanguageSwitcher() {
   const { lang, setLang, languages } = useLanguage();
@@ -100,6 +101,41 @@ function ServicesDropdown() {
   );
 }
 
+function AuthControl() {
+  const auth = useAuth();
+
+  // Avoid a flash of "logged out" state while the /api/auth/me check is
+  // still in flight — render nothing extra until we actually know.
+  if (auth.loading) return null;
+
+  if (auth.user) {
+    const firstName = (auth.user.fullName || "").split(" ")[0] || auth.user.fullName;
+    async function handleLogout() {
+      try {
+        await auth.logout();
+      } finally {
+        // Simplest way to reset all page state across this router-less,
+        // multi-entry-point app — every page re-checks auth on load.
+        window.location.href = "/";
+      }
+    }
+    return (
+      <div className="nav__auth">
+        <span className="nav__auth-name">Hi, {firstName}</span>
+        <button type="button" className="nav__auth-logout" onClick={handleLogout}>
+          Log out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <a href="/services/register.html?mode=login" className="nav__auth-login">
+      Log in
+    </a>
+  );
+}
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -128,6 +164,7 @@ export default function Nav() {
           <a href="/about.html">{t.nav.about}</a>
           <ServicesDropdown />
           <LanguageSwitcher />
+          <AuthControl />
           <a href="/contact.html" className="btn btn--ink nav__cta"><span>{t.nav.contact}</span></a>
         </div>
       </div>

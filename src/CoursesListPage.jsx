@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import PageShell from "./PageShell.jsx";
 import { fetchCourses, resolveImageUrl } from "./data/coursesApi.js";
+import { useAuth } from "./auth/AuthContext.jsx";
+import * as authApi from "./data/authApi.js";
 
 const Arrow = () => (
   <svg className="arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -24,12 +26,15 @@ function getTypeFromUrl() {
 }
 
 export default function CoursesListPage({ defaultFilter = "CSCA" } = {}) {
+  const auth = useAuth();
   const [courses, setCourses] = useState(null);
   const [error, setError] = useState(null);
   // A ?type= query param (e.g. from the Education page's General/CSCA
   // buttons) takes priority over the page's own default so the same
   // courses.html entry point can land pre-filtered either way.
   const [filter, setFilter] = useState(getTypeFromUrl() || defaultFilter);
+
+  const [myRegistrations, setMyRegistrations] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -38,6 +43,18 @@ export default function CoursesListPage({ defaultFilter = "CSCA" } = {}) {
       .catch((err) => { if (!cancelled) setError(err.message); });
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    if (!auth.user) {
+      setMyRegistrations(null);
+      return;
+    }
+    let cancelled = false;
+    authApi.getMyRegistrations()
+      .then((data) => { if (!cancelled) setMyRegistrations(data); })
+      .catch(() => { if (!cancelled) setMyRegistrations([]); });
+    return () => { cancelled = true; };
+  }, [auth.user]);
 
   const visible = (courses || []).filter((c) => filter === "All" || c.courseType === filter);
 
@@ -56,6 +73,18 @@ export default function CoursesListPage({ defaultFilter = "CSCA" } = {}) {
 
         <section className="course-list__body">
           <div className="container">
+            {auth.user && (
+              <p className="course-list__auth-strip">
+                Logged in as <strong>{auth.user.fullName}</strong> · Registered for:{" "}
+                {myRegistrations === null
+                  ? "loading…"
+                  : myRegistrations.length === 0
+                    ? "you haven't registered for any courses yet."
+                    : myRegistrations.map((r) => r.courseTitle).join(", ")}
+                {" "}· <a href="/services/register.html">Register for another course</a>
+              </p>
+            )}
+
             <div className="course-list__filters">
               {["CSCA", "General", "All"].map((t) => (
                 <button
@@ -77,16 +106,18 @@ export default function CoursesListPage({ defaultFilter = "CSCA" } = {}) {
 
             <div className="course-grid">
               {visible.map((c) => (
-                <a key={c.courseID} href={`/services/course.html?id=${c.courseID}`} className="course-tile" data-reveal>
-                  <div className="course-tile__cover">
+                <div key={c.courseID} className="course-tile" data-reveal>
+                  <a href={`/services/course.html?id=${c.courseID}`} className="course-tile__cover">
                     {c.courseImageURL
                       ? <img src={resolveImageUrl(c.courseImageURL)} alt="" loading="lazy" />
                       : <div className="course-tile__cover-placeholder" />}
                     <span className={`course-tile__type ${c.courseType === "CSCA" ? "is-csca" : "is-general"}`}>{c.courseType}</span>
-                  </div>
+                  </a>
                   <div className="course-tile__body">
                     {c.categoryName && <p className="course-tile__category">{c.categoryName}</p>}
-                    <h3>{c.courseTitle}</h3>
+                    <a href={`/services/course.html?id=${c.courseID}`} className="course-tile__title-link">
+                      <h3>{c.courseTitle}</h3>
+                    </a>
                     {(c.duration || c.deliveryMethod) && (
                       <p className="course-tile__meta"><ClockIcon /> {[c.duration, c.deliveryMethod].filter(Boolean).join(" · ")}</p>
                     )}
@@ -95,10 +126,16 @@ export default function CoursesListPage({ defaultFilter = "CSCA" } = {}) {
                       {c.fee ? (
                         <span className="course-tile__price">{c.currencyCode} {Number(c.fee).toLocaleString()}</span>
                       ) : <span />}
-                      <span className="course-tile__link">View details <Arrow /></span>
+                      <a href={`/services/course.html?id=${c.courseID}`} className="course-tile__link">View details <Arrow /></a>
                     </div>
+                    <a
+                      href={`/services/register.html?courseId=${encodeURIComponent(c.courseID)}`}
+                      className="course-tile__register-btn"
+                    >
+                      Register
+                    </a>
                   </div>
-                </a>
+                </div>
               ))}
             </div>
           </div>

@@ -15,6 +15,7 @@ export default defineConfig({
         university: resolve(__dirname, 'services/university.html'),
         courses: resolve(__dirname, 'services/courses.html'),
         course: resolve(__dirname, 'services/course.html'),
+        register: resolve(__dirname, 'services/register.html'),
         csca: resolve(__dirname, 'services/csca.html'),
         serviceHealthcare: resolve(__dirname, 'services/healthcare.html'),
         serviceBusiness: resolve(__dirname, 'services/business.html'),

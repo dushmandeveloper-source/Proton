@@ -16,8 +16,8 @@ const CheckIcon = () => (
 // /api/courses/{id}. Mirrors UniversityDetailPage's structure: hero, main
 // content column, sidebar summary card. Content sections (outcomes, training
 // points, requirements, pathways) match what the LMS_System reference shows
-// on a public course page; CSCA subjects/schedules replace its cart/enroll
-// flow since student enrollment is a later phase here.
+// on a public course page; CSCA subjects/schedules sit alongside a
+// "Register for this course" action backed by the enrollment API.
 export default function CourseDetailPage() {
   const [state, setState] = useState({ loading: true, error: null, data: null });
 
@@ -178,14 +178,13 @@ export default function CourseDetailPage() {
                   <div className="course-detail__table-wrap">
                     <table className="course-detail__table">
                       <thead>
-                        <tr><th>Batch</th><th>Date</th><th>Time</th><th>Location</th></tr>
+                        <tr><th>Batch</th><th>Periods</th><th>Location</th></tr>
                       </thead>
                       <tbody>
                         {schedules.map((s) => (
                           <tr key={s.scheduleID}>
                             <td>{s.scheduleName || "—"}</td>
-                            <td>{s.scheduleDate ? new Date(s.scheduleDate).toLocaleDateString() : "—"}</td>
-                            <td>{s.timeRangeText || "—"}</td>
+                            <td>{s.segmentsSummary || "—"}</td>
                             <td>{s.location || "—"}</td>
                           </tr>
                         ))}
@@ -261,6 +260,13 @@ export default function CourseDetailPage() {
                   <span>{c.handbookTitle || "Download Course Handbook"}</span>
                 </a>
               )}
+
+              <a
+                href={`/services/register.html?courseId=${encodeURIComponent(c.courseID)}`}
+                className="btn btn--ink course-detail__register-btn"
+              >
+                <span>Register for this course</span>
+              </a>
 
               <a href="/contact.html" className="btn btn--ink course-detail__enquire-link">
                 <span>Enquire about this course</span>

@@ -19,3 +19,13 @@ export async function fetchCourse(id) {
   if (!res.ok) throw new Error(`Failed to load course ${id} (${res.status})`);
   return res.json();
 }
+
+// Schedules-only lookup — lighter than fetchCourse() when all that's needed
+// is the batch list (e.g. RegisterPage.jsx fetching batches for several
+// selected courses at once). Same per-schedule shape as fetchCourse's
+// `schedules` array: { scheduleID, scheduleName, location, segmentsSummary, ... }.
+export async function fetchCourseSchedules(id) {
+  const res = await fetch(`${API_BASE}/api/courses/${encodeURIComponent(id)}/schedules`);
+  if (!res.ok) throw new Error(`Failed to load schedules for course ${id} (${res.status})`);
+  return res.json();
+}
